@@ -139,7 +139,6 @@ pub use self::write_vectored::WriteVectored;
 mod write_all;
 pub use self::write_all::WriteAll;
 
-
 /// An extension trait which adds utility methods to `AsyncRead` types.
 pub trait AsyncReadExt: AsyncRead {
     /// Creates an adaptor which will chain this stream with another.

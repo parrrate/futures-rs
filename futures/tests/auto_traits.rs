@@ -862,7 +862,6 @@ mod io {
     assert_impl!(WriteAll<'_, ()>: Unpin);
     assert_not_impl!(WriteAll<'_, PhantomPinned>: Unpin);
 
-
     assert_impl!(WriteHalf<()>: Send);
     assert_not_impl!(WriteHalf<*const ()>: Send);
     assert_impl!(WriteHalf<()>: Sync);
