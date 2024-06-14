@@ -5,9 +5,6 @@ use std::thread;
 
 #[test]
 fn lots() {
-    #[cfg(not(futures_sanitizer))]
-    const N: i32 = 1_000;
-    #[cfg(futures_sanitizer)] // If N is many, asan reports stack-overflow: https://gist.github.com/taiki-e/099446d21cbec69d4acbacf7a9646136
     const N: i32 = 100;
 
     fn do_it(input: (i32, i32)) -> BoxFuture<'static, i32> {

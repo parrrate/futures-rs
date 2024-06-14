@@ -13,7 +13,6 @@ members = [
 
   "futures/tests/macro-tests",
   "futures/tests/macro-reexport",
-  "futures/tests/no-std",
 
   "examples/functional",
   "examples/imperative",

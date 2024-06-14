@@ -28,7 +28,6 @@ portable-atomic = ["futures-core/portable-atomic"]
 # `unstable` feature as an explicit opt-in to unstable API.
 unstable = []
 bilock = []
-write-all-vectored = ["io"]
 
 [dependencies]
 futures-core = { path = "../futures-core", version = "=1.0.0-alpha.0", default-features = false }

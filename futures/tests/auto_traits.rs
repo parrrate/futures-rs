@@ -862,19 +862,6 @@ mod io {
     assert_impl!(WriteAll<'_, ()>: Unpin);
     assert_not_impl!(WriteAll<'_, PhantomPinned>: Unpin);
 
-    #[cfg(feature = "write-all-vectored")]
-    assert_impl!(WriteAllVectored<'_, '_, ()>: Send);
-    #[cfg(feature = "write-all-vectored")]
-    assert_not_impl!(WriteAllVectored<'_, '_, *const ()>: Send);
-    #[cfg(feature = "write-all-vectored")]
-    assert_impl!(WriteAllVectored<'_, '_, ()>: Sync);
-    #[cfg(feature = "write-all-vectored")]
-    assert_not_impl!(WriteAllVectored<'_, '_, *const ()>: Sync);
-    #[cfg(feature = "write-all-vectored")]
-    assert_impl!(WriteAllVectored<'_, '_, ()>: Unpin);
-    // WriteAllVectored requires `W: Unpin`
-    // #[cfg(feature = "write-all-vectored")]
-    // assert_not_impl!(WriteAllVectored<'_, PhantomPinned>: Unpin);
 
     assert_impl!(WriteHalf<()>: Send);
     assert_not_impl!(WriteHalf<*const ()>: Send);

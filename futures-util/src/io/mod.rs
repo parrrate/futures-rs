@@ -139,10 +139,6 @@ pub use self::write_vectored::WriteVectored;
 mod write_all;
 pub use self::write_all::WriteAll;
 
-#[cfg(feature = "write-all-vectored")]
-mod write_all_vectored;
-#[cfg(feature = "write-all-vectored")]
-pub use self::write_all_vectored::WriteAllVectored;
 
 /// An extension trait which adds utility methods to `AsyncRead` types.
 pub trait AsyncReadExt: AsyncRead {
@@ -487,61 +483,6 @@ pub trait AsyncWriteExt: AsyncWrite {
         Self: Unpin,
     {
         assert_future::<Result<()>, _>(WriteAll::new(self, buf))
-    }
-
-    /// Attempts to write multiple buffers into this writer.
-    ///
-    /// Creates a future that will write the entire contents of `bufs` into this
-    /// `AsyncWrite` using [vectored writes].
-    ///
-    /// The returned future will not complete until all the data has been
-    /// written.
-    ///
-    /// [vectored writes]: std::io::Write::write_vectored
-    ///
-    /// # Notes
-    ///
-    /// Unlike `io::Write::write_vectored`, this takes a *mutable* reference to
-    /// a slice of `IoSlice`s, not an immutable one. That's because we need to
-    /// modify the slice to keep track of the bytes already written.
-    ///
-    /// Once this futures returns, the contents of `bufs` are unspecified, as
-    /// this depends on how many calls to `write_vectored` were necessary. It is
-    /// best to understand this function as taking ownership of `bufs` and to
-    /// not use `bufs` afterwards. The underlying buffers, to which the
-    /// `IoSlice`s point (but not the `IoSlice`s themselves), are unchanged and
-    /// can be reused.
-    ///
-    /// # Examples
-    ///
-    /// ```
-    /// # futures::executor::block_on(async {
-    /// use futures::io::AsyncWriteExt;
-    /// use futures_util::io::Cursor;
-    /// use std::io::IoSlice;
-    ///
-    /// let mut writer = Cursor::new(Vec::new());
-    /// let bufs = &mut [
-    ///     IoSlice::new(&[1]),
-    ///     IoSlice::new(&[2, 3]),
-    ///     IoSlice::new(&[4, 5, 6]),
-    /// ];
-    ///
-    /// writer.write_all_vectored(bufs).await?;
-    /// // Note: the contents of `bufs` is now unspecified, see the Notes section.
-    ///
-    /// assert_eq!(writer.into_inner(), &[1, 2, 3, 4, 5, 6]);
-    /// # Ok::<(), Box<dyn std::error::Error>>(()) }).unwrap();
-    /// ```
-    #[cfg(feature = "write-all-vectored")]
-    fn write_all_vectored<'a, 'b>(
-        &'a mut self,
-        bufs: &'a mut [IoSlice<'b>],
-    ) -> WriteAllVectored<'a, 'b, Self>
-    where
-        Self: Unpin,
-    {
-        assert_future::<Result<()>, _>(WriteAllVectored::new(self, bufs))
     }
 
     /// Wraps an [`AsyncWrite`] in a compatibility wrapper that allows it to be
